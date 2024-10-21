@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import express from 'express';
+import express, { Response } from 'express';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import RedisStore from 'connect-redis';
@@ -14,7 +14,7 @@ import helmet from 'helmet';
 import rtracer from 'cls-rtracer';
 import morgan from 'morgan';
 import logger from './utils/logger';
-import { errorResMsg } from './utils/response';
+import { errorResMsg, successResMsg } from './utils/response';
 import { StatusCodes } from 'http-status-codes';
 import apiLimiter from './middlewares/ratelimit';
 
@@ -77,6 +77,12 @@ app.use(
 );
 
 app.use(apiLimiter)
+
+app.get("/", (_, res: Response): any => {
+    return successResMsg(res, StatusCodes.OK, {
+      message: "Welcome to the Mock Premier League API",
+    });
+  });
 
 // Routes
 app.use('/api/teams', teamRoutes);
